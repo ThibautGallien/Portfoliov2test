@@ -1,38 +1,42 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme } from 'next-themes'
-import { Moon, Sun, Menu, X, Globe } from 'lucide-react'
-import Link from 'next/link'
-import { useTranslation } from '@/lib/translations'
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
+import { Moon, Sun, Menu, X, Globe } from "lucide-react";
+import Link from "next/link";
+import { useTranslation } from "@/lib/translations";
 
 export default function Layout({ children }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const router = useRouter()
-  const { locale, locales, asPath } = router
-  const t = useTranslation(locale)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState("fr");
+  const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
+  const t = useTranslation(currentLocale);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const navigation = [
-    { name: t.nav.home, href: '/' },
-    { name: t.nav.dev, href: '/dev' },
-    { name: t.nav.copy, href: '/copy' },
-    { name: t.nav.blog, href: '/blog' },
-    { name: t.nav.contact, href: '/contact' },
-  ]
+    { name: t.nav.home, href: "/" },
+    { name: t.nav.dev, href: "/dev" },
+    { name: t.nav.copy, href: "/copy" },
+    { name: t.nav.blog, href: "/blog" },
+    { name: t.nav.contact, href: "/contact" },
+  ];
+
+  const locales = ["fr", "en", "jp"];
 
   const changeLanguage = (newLocale) => {
-    router.push(asPath, asPath, { locale: newLocale })
-  }
+    setCurrentLocale(newLocale);
+    // Pour l'instant, on stocke juste la langue localement
+    // Plus tard vous pourrez implémenter la vraie gestion i18n
+  };
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -62,11 +66,13 @@ export default function Layout({ children }) {
                   key={item.name}
                   href={item.href}
                   className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                    router.pathname === item.href ? 'text-primary' : 'text-muted-foreground'
+                    pathname === item.href
+                      ? "text-primary"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {item.name}
-                  {router.pathname === item.href && (
+                  {pathname === item.href && (
                     <motion.div
                       layoutId="activeTab"
                       className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
@@ -89,7 +95,7 @@ export default function Layout({ children }) {
                       key={loc}
                       onClick={() => changeLanguage(loc)}
                       className={`block w-full px-3 py-2 text-sm text-left hover:bg-accent transition-colors ${
-                        locale === loc ? 'text-primary font-medium' : ''
+                        currentLocale === loc ? "text-primary font-medium" : ""
                       }`}
                     >
                       {loc.toUpperCase()}
@@ -100,10 +106,14 @@ export default function Layout({ children }) {
 
               {/* Theme Toggle */}
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="p-2 rounded-lg hover:bg-accent transition-colors"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
               </button>
 
               {/* Mobile Menu Button */}
@@ -111,7 +121,11 @@ export default function Layout({ children }) {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
               >
-                {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                {isMenuOpen ? (
+                  <X className="w-4 h-4" />
+                ) : (
+                  <Menu className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
@@ -122,7 +136,7 @@ export default function Layout({ children }) {
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden bg-background border-t border-border"
             >
@@ -132,9 +146,9 @@ export default function Layout({ children }) {
                     key={item.name}
                     href={item.href}
                     className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      router.pathname === item.href
-                        ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-accent'
+                      pathname === item.href
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-accent"
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -151,7 +165,7 @@ export default function Layout({ children }) {
       <main className="pt-16">
         <AnimatePresence mode="wait">
           <motion.div
-            key={router.pathname}
+            key={pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -174,7 +188,8 @@ export default function Layout({ children }) {
                 <span className="font-bold text-xl">Portfolio</span>
               </div>
               <p className="text-muted-foreground">
-                Développeur web et copywriter passionné par la création d'expériences digitales exceptionnelles.
+                Développeur web et copywriter passionné par la création
+                d'expériences digitales exceptionnelles.
               </p>
             </div>
             <div>
@@ -201,5 +216,5 @@ export default function Layout({ children }) {
         </div>
       </footer>
     </div>
-  )
+  );
 }

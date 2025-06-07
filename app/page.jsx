@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { ArrowRight, Code, PenTool, Sparkles } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useTranslation } from '@/lib/translations'
-import AnimatedSection from '@/components/AnimatedSection'
+import { motion } from "framer-motion";
+import { ArrowRight, Code, PenTool, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { useTranslation } from "@/lib/translations";
+import AnimatedSection from "@/components/AnimatedSection";
 
 export default function Home() {
-  const router = useRouter()
-  const { locale } = router
-  const t = useTranslation(locale)
+  // Pour l'instant, on utilise français par défaut
+  // Plus tard vous pourrez implémenter la vraie gestion de locale
+  const locale = "fr";
+  const t = useTranslation(locale);
 
   return (
     <div className="min-h-screen">
@@ -41,7 +41,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
               {t.home.title}
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">
               {t.home.subtitle}
             </p>
@@ -61,15 +61,15 @@ export default function Home() {
                   <div className="flex items-center justify-center w-16 h-16 bg-primary/20 rounded-xl mb-6 mx-auto group-hover:bg-primary/30 transition-colors">
                     <Code className="w-8 h-8 text-primary" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-4 text-primary">
                     {t.home.devChoice}
                   </h3>
-                  
+
                   <p className="text-muted-foreground mb-6">
                     {t.home.devDescription}
                   </p>
-                  
+
                   <div className="flex items-center justify-center gap-2 text-primary font-medium group-hover:gap-3 transition-all">
                     Découvrir mes projets
                     <ArrowRight className="w-4 h-4" />
@@ -90,15 +90,15 @@ export default function Home() {
                   <div className="flex items-center justify-center w-16 h-16 bg-secondary/20 rounded-xl mb-6 mx-auto group-hover:bg-secondary/30 transition-colors">
                     <PenTool className="w-8 h-8 text-secondary" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-4 text-secondary">
                     {t.home.copyChoice}
                   </h3>
-                  
+
                   <p className="text-muted-foreground mb-6">
                     {t.home.copyDescription}
                   </p>
-                  
+
                   <div className="flex items-center justify-center gap-2 text-secondary font-medium group-hover:gap-3 transition-all">
                     Voir mes réalisations
                     <ArrowRight className="w-4 h-4" />
@@ -138,7 +138,8 @@ export default function Home() {
               Pourquoi me choisir ?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Une approche unique combinant expertise technique et créativité rédactionnelle
+              Une approche unique combinant expertise technique et créativité
+              rédactionnelle
             </p>
           </div>
 
@@ -147,18 +148,21 @@ export default function Home() {
               {
                 icon: Code,
                 title: "Développement Expert",
-                description: "Technologies modernes, code propre et performances optimales"
+                description:
+                  "Technologies modernes, code propre et performances optimales",
               },
               {
                 icon: PenTool,
                 title: "Copywriting Persuasif",
-                description: "Contenus qui convertissent et engagent votre audience"
+                description:
+                  "Contenus qui convertissent et engagent votre audience",
               },
               {
                 icon: Sparkles,
                 title: "Approche Créative",
-                description: "Solutions uniques adaptées à vos objectifs business"
-              }
+                description:
+                  "Solutions uniques adaptées à vos objectifs business",
+              },
             ].map((feature, index) => (
               <motion.div
                 key={index}
@@ -178,5 +182,5 @@ export default function Home() {
         </div>
       </AnimatedSection>
     </div>
-  )
+  );
 }
